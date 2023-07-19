@@ -1,31 +1,48 @@
-# Python program to demonstrate
-# working of FIFO
-# using Queue interface in Python
+class Queue:
+    def __init__(self):
+        self.queue = []
 
-q = []
+    def is_empty(self):
+        return len(self.queue) == 0
 
-# Adds elements {0, 1, 2, 3, 4} to queue
-for i in range(5):
-	q.append(i)
+    def enqueue(self, item):
+        self.queue.append(item)
 
-# Display contents of the queue.
-print("Elements of queue-" , q)
+    def dequeue(self):
+        if not self.is_empty():
+            return self.queue.pop(0)
+        else:
+            raise IndexError("Queue is empty")
 
-# To remove the head of queue.
-# In this the oldest element '0' will be removed
-removedele = q.pop(0)
-print("removed element-" , removedele)
+    def peek(self):
+        if not self.is_empty():
+            return self.queue[0]
+        else:
+            raise IndexError("Queue is empty")
 
-print(q)
+    def size(self):
+        return len(self.queue)
 
-# To view the head of queue
-head = q[0]
-print("head of queue-" , head)
 
-# Rest all methods of collection interface,
-# Like size and contains can be used with this
-# implementation.
-size = len(q)
-print("Size of queue-" , size)
+# Test the FIFO algorithm
+if __name__ == "__main__":
+    queue = Queue()
 
-# This code is contributed by patel2127.
+    # Enqueue elements into the queue
+    queue.enqueue(1)
+    queue.enqueue(2)
+    queue.enqueue(3)
+    queue.enqueue(4)
+
+    # Dequeue elements from the queue
+    print(queue.dequeue())  # Output: 1
+    print(queue.dequeue())  # Output: 2
+
+    # Peek the front element of the queue
+    print(queue.peek())  # Output: 3
+
+    # Check if the queue is empty
+    print(queue.is_empty())  # Output: False
+
+    # Get the size of the queue
+    print(queue.size())  # Output: 2
