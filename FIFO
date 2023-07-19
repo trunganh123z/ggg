@@ -1,48 +1,42 @@
-class Queue:
-    def __init__(self):
-        self.queue = []
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
 
-    def is_empty(self):
-        return len(self.queue) == 0
+public class QueueExample {
+    public static void main(String[] args) {
+        Queue<Integer> q = new LinkedList<>();
+        Scanner scanner = new Scanner(System.in);
 
-    def enqueue(self, item):
-        self.queue.append(item)
+        System.out.print("Enter the number of elements to add to the queue: ");
+        int numElements = scanner.nextInt();
 
-    def dequeue(self):
-        if not self.is_empty():
-            return self.queue.pop(0)
-        else:
-            raise IndexError("Queue is empty")
+        System.out.println("Enter " + numElements + " elements to add to the queue:");
+        for (int i = 0; i < numElements; i++) {
+            int element = scanner.nextInt();
+            q.add(element);
+        }
 
-    def peek(self):
-        if not self.is_empty():
-            return self.queue[0]
-        else:
-            raise IndexError("Queue is empty")
+        System.out.println("Elements of queue: " + q);
 
-    def size(self):
-        return len(self.queue)
+        // To remove the head of queue.
+        // In this case, the oldest element will be removed
+        if (!q.isEmpty()) {
+            int removedEle = q.poll();
+            System.out.println("Removed element: " + removedEle);
+        } else {
+            System.out.println("Queue is empty.");
+        }
 
+        System.out.println("Updated queue: " + q);
 
-# Test the FIFO algorithm
-if __name__ == "__main__":
-    queue = Queue()
+        int head = q.peek();
+        System.out.println("Head of queue: " + head);
 
-    # Enqueue elements into the queue
-    queue.enqueue(1)
-    queue.enqueue(2)
-    queue.enqueue(3)
-    queue.enqueue(4)
+        // Rest all methods of the collection interface,
+        // implementation.
+        int size = q.size();
+        System.out.println("Size of queue: " + size);
 
-    # Dequeue elements from the queue
-    print(queue.dequeue())  # Output: 1
-    print(queue.dequeue())  # Output: 2
-
-    # Peek the front element of the queue
-    print(queue.peek())  # Output: 3
-
-    # Check if the queue is empty
-    print(queue.is_empty())  # Output: False
-
-    # Get the size of the queue
-    print(queue.size())  # Output: 2
+        scanner.close();
+    }
+}
