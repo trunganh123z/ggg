@@ -1,65 +1,60 @@
-class Page:
-    def __init__(self, page_number):
-        self.page_number = page_number
-        self.reference_bit = 0
+import java.util.*;
 
+public class NRUAlgorithm {
+    private final int CACHE_SIZE;
+    private List<Integer> pages;
+    private List<Integer> usageBits;
 
-class NRU:
-    def __init__(self, page_frames):
-        self.page_frames = page_frames
+    public NRUAlgorithm(int capacity) {
+        this.CACHE_SIZE = capacity;
+        this.pages = new ArrayList<>();
+        this.usageBits = new ArrayList<>();
+    }
 
-    def reset_reference_bits(self):
-        for page_frame in self.page_frames:
-            page_frame.reference_bit = 0
+    public void addPage(int page) {
+        if (!pages.contains(page)) {
+            if (pages.size() >= CACHE_SIZE) {
+                evictPage();
+            }
+            pages.add(page);
+            usageBits.add(0);
+        } else {
+            int index = pages.indexOf(page);
+            usageBits.set(index, 1);
+        }
+    }
 
-    def insert_page(self, page_number):
-        page_to_replace = None
+    public void evictPage() {
+        int minBit = Collections.min(usageBits);
+        List<Integer> candidates = new ArrayList<>();
+        for (int i = 0; i < usageBits.size(); i++) {
+            if (usageBits.get(i) == minBit) {
+                candidates.add(i);
+            }
+        }
+        int evictIndex = candidates.get(0);
+        int evictedPage = pages.remove(evictIndex);
+        usageBits.remove(evictIndex);
+        System.out.println("Evicted page: " + evictedPage);
+    }
 
-        for page_frame in self.page_frames:
-            if page_frame is None:
-                page_frame = Page(page_number)
-                return
+    public void displayCache() {
+        System.out.println("Current Cache: " + pages);
+        System.out.println("Usage Bits: " + usageBits);
+    }
 
-            if page_frame.page_number == page_number:
-                page_frame.reference_bit = 1
-                return
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the capacity of the NRU Cache: ");
+        int capacity = scanner.nextInt();
 
-            if page_frame.reference_bit == 0:
-                page_to_replace = page_frame
+        NRUAlgorithm nruCache = new NRUAlgorithm(capacity);
 
-        if page_to_replace is None:
-            # If no page with reference bit 0 is found, choose any page with reference bit 1
-            for page_frame in self.page_frames:
-                if page_frame.reference_bit == 1:
-                    page_to_replace = page_frame
-                    break
-
-        if page_to_replace is not None:
-            page_to_replace.page_number = page_number
-            page_to_replace.reference_bit = 1
-
-    def display_memory_contents(self):
-        print("Page frames:")
-        for i, page_frame in enumerate(self.page_frames):
-            if page_frame is not None:
-                print(f"Frame {i}: Page {page_frame.page_number}")
-            else:
-                print(f"Frame {i}: Empty")
-
-
-# Test the NRU algorithm
-if __name__ == "__main__":
-    num_page_frames = 4  # Number of page frames in memory
-    page_reference_sequence = [0, 1, 2, 3, 0, 4, 0, 5, 1, 4, 2, 0, 6, 1]  # Page reference sequence
-
-    nru = NRU([None] * num_page_frames)
-
-    for page_number in page_reference_sequence:
-        nru.insert_page(page_number)
-
-        # After every page insertion, reset the reference bits every 5 references
-        if len(nru.page_frames) % 5 == 0:
-            nru.reset_reference_bits()
-
-        nru.display_memory_contents()
-        print("------")
+        System.out.println("Enter the pages (enter -1 to stop): ");
+        int page;
+        while ((page = scanner.nextInt()) != -1) {
+            nruCache.addPage(page);
+            nruCache.displayCache();
+        }
+    }
+}
